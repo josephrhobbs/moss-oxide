@@ -2,9 +2,13 @@
 // Main executable for Moss Oxide
 
 use std::io;
+use std::io::Write;
 
 fn main() {
     let mut input = String::new();
+
+    print!("\nEnter input string> ");
+    io::stdout().flush().unwrap();
 
     let input_result = io::stdin().read_line(&mut input);
 
@@ -19,8 +23,11 @@ fn main() {
     // TODO: Clean up newlines (CRLF vs. LF)
     let bytes: &[u8] = input.as_bytes();
 
-    println!("{}", input);
-    println!("{:#?}", bytes);
+    let hashes: &[u32] = hash_ascii(&bytes);
+
+    println!("\nINPUT\n{}", input);
+    println!("RAW BYTES\n{:#?}\n", bytes);
+    println!("HASHES\n{:#?}\n", hashes);
 }
 
 
