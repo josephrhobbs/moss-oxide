@@ -1,43 +1,7 @@
-// crate::main
-// Main executable for Moss Oxide
-
-use std::io;
-use std::io::Write;
-
-use hash::krhash::hash_ascii;
-
-fn main() {
-    let mut input = String::new();
-
-    print!("\nEnter input string> ");
-    io::stdout().flush().unwrap();
-
-    let input_result = io::stdin().read_line(&mut input);
-
-    match input_result {
-        Ok(_) => {},
-        Err(_) => {
-            // TODO: Implement more robust error handling
-            todo!();
-        }
-    }
-
-    // TODO: Clean up newlines (CRLF vs. LF)
-    let bytes: &[u8] = input.as_bytes();
-    let guarantee_threshold: usize = 8;
-    let noise_threshold: usize = 4;
-
-    let hashes: Vec<u64> = hash_ascii(&bytes, guarantee_threshold, noise_threshold);
-
-    println!("\nINPUT\n{}", input);
-    println!("RAW BYTES\n{:#?}\n", bytes);
-    println!("HASHES\n{:#?}\n", hashes);
-}
-
+// crate::krhash::mod.rs
 
 const BASE: i128 = 256;
 const HASHMAX: i128 = u64::MAX as i128;
-
 
 /// Computes Karp-Rabin hashes on the given ASCII bytestring with substrings of length `k`.
 /// 
@@ -47,7 +11,7 @@ const HASHMAX: i128 = u64::MAX as i128;
 /// `k`: a noise threshold.  We want to discard all substring matches of this length or shorter.
 /// 
 /// Returns a slice of 32-bit unsigned integers representing each K-R hash.
-fn hash_ascii(bytes: &[u8], t: usize, k: usize) -> Vec<u64> {
+pub fn hash_ascii(bytes: &[u8], t: usize, k: usize) -> Vec<u64> {
     let mut i = 0;
 
     // Define a "window size"
