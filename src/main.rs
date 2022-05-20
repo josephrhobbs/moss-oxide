@@ -76,7 +76,15 @@ fn main() {
             count += 1;
         }
     }
+    for value in &fingerprint2 {
+        if fingerprint1.contains(value) {
+            count += 1;
+        }
+    }
+    count /= 2;
+
     let similarity = 100.0*((count as f64*count as f64)/(fingerprint1.len() as f64*fingerprint2.len() as f64)).sqrt();
+    
     println!("\nComparison: {:.4}% similar", similarity);
 
     quit(MossStatus::Ok);
