@@ -83,8 +83,8 @@ fn main() {
     }
     count /= 2;
 
-    let similarity = 100.0*((count as f64*count as f64)/(fingerprint1.len() as f64*fingerprint2.len() as f64)).sqrt();
-    
+    let similarity = 100.0*((count as f64*count as f64)/(fingerprint1.len() as f64*fingerprint2.len() as f64));
+
     println!("\nComparison: {:.4}% similar", similarity);
 
     quit(MossStatus::Ok);
