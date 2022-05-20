@@ -38,7 +38,7 @@ pub fn hash_ascii(bytes: &[u8], t: usize, k: usize) -> Vec<u64> {
             // Compute the first K-R hash
             for (j, c) in slice.iter().enumerate() {
                 let power: u32 = k as u32 - j as u32 + 1;
-                hash += BASE.pow(power) + *c as i128;
+                hash += BASE.pow(power)*(*c as i128);
                 hash %= HASHMAX;
             }
             hashes.push(hash as u64);
@@ -53,9 +53,6 @@ pub fn hash_ascii(bytes: &[u8], t: usize, k: usize) -> Vec<u64> {
             hash *= BASE;
 
             hash %= HASHMAX;
-            if hash < 0 {
-                hash += HASHMAX;
-            }
 
             hashes.push(hash as u64);
         }
