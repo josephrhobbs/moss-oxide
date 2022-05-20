@@ -2,12 +2,18 @@
 name = "moss-oxide"
 version = "0.1.0"
 edition = "2021"
+authors = ["Joseph Hobbs"]
+homepage = "https://github.com/hobbsbros/moss-oxide.git"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [lib]
-name = "lib"
+name = "moss"
 path = "src/lib.rs"
+
+[[bin]]
+name = "msx"
+path = "src/main.rs"
 
 [dependencies]
 colored = "2.0.0"

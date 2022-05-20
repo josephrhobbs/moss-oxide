@@ -7,7 +7,7 @@ use std::env;
 use std::fs;
 use std::process::exit;
 
-use lib::fingerprint::{
+use moss::fingerprint::{
     fingerprint,
 };
 
@@ -25,20 +25,13 @@ enum MossStatus {
 fn quit(status: MossStatus) -> ! {
     match status {
         MossStatus::Ok => {
-            println!("{} {}", "Success".bold().green(), "Process finished successfully.");
+            println!("");
         },
         MossStatus::FileError => {
-            println!("{} {}", "Fatal".bold().red(), "Could not find the file specified");
+            println!("\n{} {}", "Fatal".bold().red(), "Could not find the file specified");
         },
         MossStatus::CLIError => {
-            println!("{} {}", "Help".bold().yellow(), "\\n
-            Moss Oxide
-            \tA very simple software similarity comparison tool.
-
-
-            USAGE
-            \tmsx <FILE 1> <FILE 2>
-            ");
+            println!("\n{} {}", "Help".bold().yellow(), "\n\nMoss Oxide\nA very simple software similarity comparison tool.\n\nUSAGE\nmsx <FILE 1> <FILE 2>\n");
         }
     }
 
@@ -84,7 +77,7 @@ fn main() {
         }
     }
     let similarity = 100.0*((count as f64*count as f64)/(fingerprint1.len() as f64*fingerprint2.len() as f64)).sqrt();
-    println!("\nComparison: {:6}% similar", similarity);
+    println!("\nComparison: {:.4}% similar", similarity);
 
     quit(MossStatus::Ok);
 }
