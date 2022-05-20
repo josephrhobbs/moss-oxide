@@ -1,1 +1,1 @@
-pub mod krhash;
+pub mod fingerprint;

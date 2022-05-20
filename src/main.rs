@@ -3,33 +3,88 @@
 
 use std::io;
 use std::io::Write;
+use std::env;
+use std::fs;
+use std::process::exit;
 
-use hash::krhash::hash_ascii;
+use lib::fingerprint::{
+    fingerprint,
+};
 
-fn main() {
-    let mut input = String::new();
+use colored::*;
 
-    print!("\nEnter input string> ");
-    io::stdout().flush().unwrap();
 
-    let input_result = io::stdin().read_line(&mut input);
+enum MossStatus {
+    Ok,
+    FileError,
+    CLIError,
+}
 
-    match input_result {
-        Ok(_) => {},
-        Err(_) => {
-            // TODO: Implement more robust error handling
-            todo!();
+
+/// Quits execution without panics.  Allows the user to terminate the process.
+fn quit(status: MossStatus) -> ! {
+    match status {
+        MossStatus::Ok => {
+            println!("{} {}", "Success".bold().green(), "Process finished successfully.");
+        },
+        MossStatus::FileError => {
+            println!("{} {}", "Fatal".bold().red(), "Could not find the file specified");
+        },
+        MossStatus::CLIError => {
+            println!("{} {}", "Help".bold().yellow(), "\\n
+            Moss Oxide
+            \tA very simple software similarity comparison tool.
+
+
+            USAGE
+            \tmsx <FILE 1> <FILE 2>
+            ");
         }
     }
 
+    exit(0);
+}
+
+
+fn main() {
+    let args: Vec<String> = env::args().collect();
+    if args.len() <= 2 {
+        quit(MossStatus::CLIError);
+    }
+    let file1: String = args[1].clone();
+    let file2: String = args[2].clone();
+    
+    io::stdout().flush().unwrap();
+
+    // TODO: Implement better error handling
+    let input1 = match fs::read_to_string(file1) {
+        Ok(s) => s,
+        Err(_) => quit(MossStatus::FileError),
+    };
+    let input2 = match fs::read_to_string(file2) {
+        Ok(s) => s,
+        Err(_) => quit(MossStatus::FileError),
+    };
+
     // TODO: Clean up newlines (CRLF vs. LF)
-    let bytes: &[u8] = input.as_bytes();
+
+    let bytes1: &[u8] = input1.as_bytes();
+    let bytes2: &[u8] = input2.as_bytes();
     let guarantee_threshold: usize = 8;
     let noise_threshold: usize = 4;
 
-    let hashes: Vec<u64> = hash_ascii(&bytes, guarantee_threshold, noise_threshold);
+    let fingerprint1: Vec<u64> = fingerprint(&bytes1, guarantee_threshold, noise_threshold);
+    let fingerprint2: Vec<u64> = fingerprint(&bytes2, guarantee_threshold, noise_threshold);
 
-    println!("\nINPUT\n{}", input);
-    println!("RAW BYTES\n{:#?}\n", bytes);
-    println!("HASHES\n{:#?}\n", hashes);
+    // TODO: Implememnt better fingerprint comparison techniques
+    let mut count = 0;
+    for value in &fingerprint1 {
+        if fingerprint2.contains(value) {
+            count += 1;
+        }
+    }
+    let similarity = 100.0*((count as f64*count as f64)/(fingerprint1.len() as f64*fingerprint2.len() as f64)).sqrt();
+    println!("\nComparison: {:6}% similar", similarity);
+
+    quit(MossStatus::Ok);
 }
