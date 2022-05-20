@@ -1,9 +1,11 @@
 [package]
 name = "moss-oxide"
+description = "A simple, open-source software similarity metric, written in Rust."
 version = "0.1.0"
 edition = "2021"
 authors = ["Joseph Hobbs"]
 homepage = "https://github.com/hobbsbros/moss-oxide.git"
+license = "MIT"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
